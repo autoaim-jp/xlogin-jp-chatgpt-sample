@@ -18,33 +18,6 @@ asocial.lib = lib
 /* a is an alias of asocial */
 const a = asocial
 
-const loadProfile = async () => {
-  const userInfoResult = await a.input.fetchUserProfile(argNamed({
-    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
-    lib: [a.lib.common.input.getRequest],
-  }))
-  a.lib.redirect(userInfoResult)
-  a.output.showUserProfile(argNamed({
-    lib: [a.lib.xdevkit.output.applyElmList],
-    other: { userInfoResult },
-  }))
-  return userInfoResult
-}
-
-const loadTimerBtn = async () => {
-  const addTimer = a.output.getAddTimer(argNamed({
-    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
-    lib: [a.lib.common.output.postRequest],
-  }))
-
-  const onClickAddTimerButton = a.action.getOnClickAddTimerButton(argNamed({
-    output: { addTimer },
-  }))
-  a.output.setOnClickAddTimerButton(argNamed({
-    onClick: { onClickAddTimerButton },
-  }))
-}
-
 const showNotification = () => {
   setInterval(() => {
     a.lib.common.output.showNotification(a.setting.browserServerSetting.getValue('apiEndpoint'), a.lib.xdevkit.output.showModal, a.lib.common.input.getRequest)
@@ -170,16 +143,10 @@ const main = async () => {
   a.lib.common.output.setOnClickNavManu()
   a.lib.monkeyPatch()
 
-  const userInfoResult = await a.app.loadProfile()
-  await a.app.loadBackupEmailAddressForm({ userInfoResult })
-  a.app.loadTimerBtn()
-  a.app.loadMessageContent()
-  a.app.loadMessageBtn()
-  a.app.loadUploadForm()
-  a.app.loadTabBtn()
+  // TODO
 
   a.app.showNotification()
-  a.app.loadPermission()
+//  a.app.loadPermission()
 
   setTimeout(() => {
     a.lib.xdevkit.output.switchLoading(false)
@@ -188,8 +155,6 @@ const main = async () => {
 
 a.app = {
   main,
-  loadProfile,
-  loadTimerBtn,
   showNotification,
   loadMessageContent,
   loadMessageBtn,
