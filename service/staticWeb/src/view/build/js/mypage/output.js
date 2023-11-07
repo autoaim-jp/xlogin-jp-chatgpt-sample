@@ -10,10 +10,10 @@ export const getSendPrompt = ({ apiEndpoint, getPromptValue, postRequest }) => {
   }
 }
 
-export const getDeleteMessage = ({ apiEndpoint, postRequest }) => {
-  const url = `${apiEndpoint}/message/delete`
-  return () => {
-    const param = {}
+export const getRegisterResponse = ({ apiEndpoint, postRequest }) => {
+  const url = `${apiEndpoint}/prompt/register`
+  return ({ responseList }) => {
+    const param = { responseList }
     return postRequest(url, param)
   }
 }
@@ -64,6 +64,7 @@ export const showChatHistory = ({ splitPermissionListResult }) => {
     document.querySelector('#jsonPermissionRequestContainer').classList.remove('hidden')
   }
 }
+
 export const showPromptForm = ({ splitPermissionListResult }) => {
   const { splitPermissionList, clientId } = splitPermissionListResult.result
   if (splitPermissionList.optional[`rw:auth:chatgpt`]) {

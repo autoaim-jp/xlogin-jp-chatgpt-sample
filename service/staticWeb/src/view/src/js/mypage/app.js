@@ -27,7 +27,7 @@ const showNotification = () => {
 const loadPromptForm = () => {
   const sendPrompt = a.output.getSendPrompt(argNamed({
     browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
-    inpuut: [a.input.getPromptValue],
+    input: [a.input.getPromptValue],
     lib: [a.lib.common.output.postRequest],
   }))
   const onSubmitSendPromptForm = a.action.getOnSubmitSendPromptForm(argNamed({
@@ -66,6 +66,30 @@ const loadPermission = async () => {
   a.lib.xdevkit.output.reloadXloginLoginBtn(splitPermissionListResult?.result?.clientId)
 }
 
+const lookupResponse = async () => {
+  const responseList = a.input.lookupResponse(argNamed({
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.input.getRequest],
+  }))
+
+  const responseListConverted = a.core.convertResponseList(argNamed({
+    param: { responseList },
+  }))
+
+  const registerResponse = a.output.getRegisterResponse(argNamed({
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.output.postRequest],
+  }))
+
+  registerResponse({ responseList: responseListConverted })
+}
+
+const startLookupResponse = () => {
+  setTimeout(async () => {
+    a.app.lookupResponse()
+  }, 5 * 1000)
+}
+
 const main = async () => {
   a.lib.xdevkit.output.switchLoading(true)
   a.lib.common.output.setOnClickNavManu()
@@ -73,6 +97,7 @@ const main = async () => {
 
   a.app.loadPromptForm()
   a.app.loadChatHistory()
+  a.app.startLookupResponse()
 
   a.app.showNotification()
   a.app.loadPermission()
@@ -87,6 +112,9 @@ a.app = {
   showNotification,
   loadPromptForm,
   loadChatHistory,
+
+  lookupResponse,
+  startLookupResponse,
 
   loadPermission,
 }
