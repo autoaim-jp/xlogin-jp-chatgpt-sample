@@ -1,16 +1,14 @@
 /* mypage/core.js */
 
-export const showUploadedImg = async ({ fetchUploadedFileList, loadUploadedImg }) => {
-  const fileListResult = await fetchUploadedFileList()
-  console.log({ debug: true, fileListResult })
-  if (!fileListResult || !fileListResult.result || !fileListResult.result.fileList || !fileListResult.result.fileList[0]) {
-    loadUploadedImg({ fileId: null })
-    return
-  }
+export const convertChatList = ({ chatList }) => {
+  const simpleChatList = []
 
-  const { fileLabel } = fileListResult.result.fileList[0]
-  loadUploadedImg({ fileLabel })
+  chatList.result.chatList.forEach((chat) => {
+    simpleChatList.push(chat)
+  })
+
+  return simpleChatList
 }
 
-export const _ = {}
+export default {}
 

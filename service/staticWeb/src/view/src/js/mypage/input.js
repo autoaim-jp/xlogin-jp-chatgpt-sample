@@ -1,27 +1,14 @@
 /* mypage/input.js */
-export const fetchUserProfile = ({ apiEndpoint, getRequest }) => {
-  const url = `${apiEndpoint}/user/profile`
+
+export const getPromptValue = () => {
+  const sendPromptInputElm = document.querySelector('#sendPromptInput')
+  return sendPromptInputElm.value
+}
+
+export const fetchChatList = ({ apiEndpoint, getRequest }) => {
+  const url = `${apiEndpoint}/chat/list`
   return getRequest(url)
 }
-
-export const fetchMessage = ({ apiEndpoint, getRequest }) => {
-  const url = `${apiEndpoint}/message/content`
-  return getRequest(url)
-}
-
-
-export const getBackupEmailAddress = ({ userInfoResult }) => {
-  const backupEmailAddress = userInfoResult?.userInfo?.public?.['auth:backupEmailAddress']
-  return backupEmailAddress || ''
-}
-
-export const getFetchUploadedFileList = ({ apiEndpoint, getRequest }) => {
-  return () => {
-    const url = `${apiEndpoint}/file/list`
-    return getRequest(url)
-  }
-}
-
 
 export default {}
 

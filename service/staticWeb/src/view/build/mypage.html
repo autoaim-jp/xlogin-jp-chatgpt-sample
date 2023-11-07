@@ -123,35 +123,38 @@
               <p class='font-semibold text-gray-800'>ChatGPT</p>
             </div>
           </div>
-          <div class='overflow-y-auto mb-4 flex-grow'> 
-            <div class='flex items-end justify-end mb-2'>
-              <div class='bg-green-100 p-2 rounded-lg'>
-                <p class='text-gray-800'>自分のメッセージ</p>
-              </div>
-              <div class='w-8 h-8 bg-gray-400 rounded-full flex-shrink-0'></div>
-            </div>
-            <div class='flex items-start mb-2'>
-              <div class='w-8 h-8 bg-gray-400 rounded-full flex-shrink-0'></div>
-              <div class='ml-2 bg-red-200 p-2 rounded-lg'>
-                <p class='text-gray-800'>相手のメッセージ</p>
-              </div>
-            </div>
+
+          <div id='chatArea' class='overflow-y-auto mb-4 flex-grow hidden'> 
           </div>
-          <div class='flex items-center'>
-            <input type='text' class='flex-grow p-2 rounded border border-gray-300 mr-2 focus:outline-none' placeholder='メッセージを入力...'>
-            <button class='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'>送信</button>
+          <div id='jsonPermissionRequestContainer' class='flex justify-center hidden'>
+            <button id='jsonPermissionRequestBtn' data-id='xloginLoginBtn' data-permission='rw:$CLIENT_ID:json' class='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>XLogin</button>
           </div>
+
+          <form id='sendPromptForm' class='flex items-center hidden' action='#'>
+            <input id='sendPromptInput' type='text' class='flex-grow p-2 rounded border border-gray-300 mr-2 focus:outline-none' placeholder='メッセージを入力...'>
+            <button id='sendPromptBtn' type='submit' class='bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600'>送信</button>
+          </form>
+          <div id='chatgptPermissionRequestContainer' class='flex justify-center hidden'>
+            <button id='chatgptPermissionRequestBtn' data-id='xloginLoginBtn' data-permission='rw:$CLIENT_ID:chatgpt' class='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>XLogin</button>
+          </div>
+
         </div>
       </div>
     </div>
 
-    <ul id='tabMenuContainerTemplate' class='hidden flex flex-wrap -mb-px flex-row justify-center'>
-</ul>
+    <div id='rightMessageTemplate' class='flex items-end justify-end mb-2 hidden'>
+      <div class='bg-green-100 p-2 rounded-lg'>
+        <p data-id='messageBody' class='text-gray-800'>自分のメッセージ</p>
+      </div>
+      <div class='w-8 h-8 bg-gray-400 rounded-full flex-shrink-0'></div>
+    </div>
 
-<li id='tabItemTemplate' class='hidden mr-2'><a href='#' class='inline-block p-4 rounded-t-lg border-b-2 border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300'></a></li>
-<li id='tabActiveItemTemplate' class='hidden mr-2'><a href='#' class='inline-block p-4 text-blue-600 rounded-t-lg border-b-2 border-blue-600 active dark:text-blue-500 dark:border-blue-500'></a></li>
-
-
+    <div id='leftMessageTemplate' class='flex items-start mb-2 hidden'>
+      <div class='w-8 h-8 bg-gray-400 rounded-full flex-shrink-0'></div>
+      <div class='ml-2 bg-red-200 p-2 rounded-lg'>
+        <p data-id='messageBody' class='text-gray-800'>相手のメッセージ</p>
+      </div>
+    </div>
     <img id='loading' class='fixed -translate-x-1/2 -translate-y-1/2 inset-1/2 transform hidden' src='/img/loading.svg' />
 
 
