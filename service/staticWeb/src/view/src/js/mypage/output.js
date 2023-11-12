@@ -32,22 +32,29 @@ export const setOnSubmitSendPromptForm = ({ onSubmitSendPromptForm }) => {
 const rightMessageTemplateElm = document.querySelector('#rightMessageTemplate')
 const leftMessageTemplateElm = document.querySelector('#leftMessageTemplate')
 export const showChatList = ({ simpleChatList }) => {
+  /* simpleChatList has { isUpdated, chatList } */
   if (!simpleChatList.isUpdated) {
     return
   }
+
   const chatAreaElm = document.querySelector('#chatArea')
-  simpleChatList.forEach((chatObj) => {
-    let chatElm = null
-    if (chatObj.isMine) {
-      chatElm = rightMessageTemplateElm.cloneNode(true)
+  simpleChatList.chatList.forEach((chatObj) => {
+    /* chatobj has { chatId, isMine, message } */
+    let chatElm = document.querySelector(`[data-chat-id="${chatObj.chatId}"]`)
+    if (!chatElm) {
+      if (chatObj.isMine) {
+        chatElm = rightMessageTemplateElm.cloneNode(true)
+      } else {
+        chatElm = leftMessageTemplateElm.cloneNode(true)
+      }
+      chatElm.id = ''
+
+      chatElm.querySelector('[data-id="messageBody"]').innerText = chatObj.message
+
+      chatAreaElm.appendChild(chatElm)
     } else {
-      chatElm = leftMessageTemplateElm.cloneNode(true)
+      chatElm.querySelector('[data-id="messageBody"]').innerText = chatObj.message
     }
-    chatElm.id = ''
-
-    chatElm.querySelector('[data-id="messageBody"]').innerText = chatObj.message
-
-    chatAreaElm.appendChild(chatElm)
   })
 }
 
