@@ -78,10 +78,14 @@ const main = async () => {
   a.lib.common.output.setOnClickNavManu()
   a.lib.monkeyPatch()
 
+  console.log('loadPromptForm')
   a.app.loadPromptForm()
-  a.app.startLookupResponse()
+  console.log('startChatHistoryLoader')
+  a.app.startChatHistoryLoader()
 
+  console.log('showNotification')
   a.app.showNotification()
+  console.log('loadPermission')
   a.app.loadPermission()
 
   setTimeout(() => {
@@ -95,8 +99,7 @@ a.app = {
   loadPromptForm,
   loadChatHistory,
 
-  lookupResponse,
-  startLookupResponse,
+  startChatHistoryLoader,
 
   loadPermission,
 }

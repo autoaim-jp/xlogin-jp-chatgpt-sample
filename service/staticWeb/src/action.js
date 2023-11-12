@@ -1,5 +1,20 @@
 /* /action.js */
 
+export const getHandlerSplitPermissionList = ({ handleInvalidSession, handleSplitPermissionList, createResponse }) => {
+   return async (req, res) => {
+     if (handleInvalidSession({ req, res })) {
+       return
+     }
+ 
+    const { splitPermissionList } = req.session.auth
+
+    const handleResult = await handleSplitPermissionList({ splitPermissionList })
+
+    createResponse({ req, res, handleResult })
+  }
+}
+
+
 export const getHandlerPromptSend = ({ handlePromptSend, createResponse }) => {
   return async (req, res) => {
     const { accessToken } = req.session.auth

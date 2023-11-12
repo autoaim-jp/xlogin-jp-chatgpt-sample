@@ -14,6 +14,16 @@ export const init = (setting, output, input, lib) => {
   mod.lib = lib
 }
 
+export const handleSplitPermissionList = async ({ splitPermissionList }) => {
+  const clientId = mod.setting.xdevkitSetting.getValue('env.CLIENT_ID')
+  const result = { splitPermissionList, clientId }
+
+  const status = mod.setting.browserServerSetting.getValue('statusList.OK')
+
+  const handleResult = { response: { status, result } }
+  return handleResult
+}
+
 export const handlePromptSend = async ({ accessToken, prompt }) => {
   const promptSendResponse = await mod.output.promptSendRequest(argNamed({
     param: { accessToken, prompt },
@@ -27,20 +37,20 @@ export const handlePromptSend = async ({ accessToken, prompt }) => {
 }
 
 export const handleChatList = async ({ accessToken }) => {
-  const ChatListResponse = await mod.input.ChatListRequest(argNamed({
+  const chatListResponse = await mod.input.chatListRequest(argNamed({
     param: { accessToken },
     xdevkitSetting: mod.setting.xdevkitSetting.getList('api.API_VERSION', 'env.API_SERVER_ORIGIN', 'env.CLIENT_ID'),
     lib: [mod.lib.getRequest],
   }))
 
-  if (!ChatListResponse || !ChatListResponse.data) {
+  if (!chatListResponse || !chatListResponse.data) {
     const status = mod.setting.browserServerSetting.getValue('statusList.INVALID_SESSION')
     const result = {}
     const handleResult = { response: { status, result } }
     return handleResult
   }
 
-  const { result } = ChatListResponse.data
+  const { result } = chatListResponse.data
   const status = mod.setting.browserServerSetting.getValue('statusList.OK')
 
   const handleResult = { response: { status, result } }

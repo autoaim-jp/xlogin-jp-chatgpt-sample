@@ -13,9 +13,9 @@ import FormData from 'form-data'
 
 import xdevkit from './xdevkit-auth-router/src/app.js'
 import setting from './setting/index.js'
-import output from './output.js'
+import * as output from './output.js'
 import * as core from './core.js'
-import input from './input.js'
+import * as input from './input.js'
 import * as action from './action.js'
 import lib from './lib.js'
 
@@ -41,6 +41,11 @@ const _getOtherRouter = () => {
 
 const _getActionRouter = () => {
   const expressRouter = express.Router()
+
+  const splitPermissionListHandler = a.action.getHandlerSplitPermissionList(argNamed({
+    core: [a.core.handleInvalidSession, a.core.handleSplitPermissionList, a.core.createResponse],
+  }))
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/session/splitPermissionList`, splitPermissionListHandler)
 
   const promptSendHandler = a.action.getHandlerPromptSend(argNamed({
     core: [a.core.handlePromptSend, a.core.createResponse],
