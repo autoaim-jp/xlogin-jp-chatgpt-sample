@@ -14,19 +14,5 @@ export const convertChatList = ({ chatList }) => {
   return simpleChatList
 }
 
-
-export const convertResponseList = ({ responseList }) => {
-  const responseListConverted = []
-  if (!responseList || !responseList.result) {
-    return responseListConverted
-  }
-
-  responseList.result.forEach((response) => {
-    responseListConverted.push(response)
-  })
-
-  return responseListConverted
-}
-
 export default {}
 

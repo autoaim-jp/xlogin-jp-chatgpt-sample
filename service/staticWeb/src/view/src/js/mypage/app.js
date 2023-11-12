@@ -66,27 +66,10 @@ const loadPermission = async () => {
   a.lib.xdevkit.output.reloadXloginLoginBtn(splitPermissionListResult?.result?.clientId)
 }
 
-const lookupResponse = async () => {
-  const responseList = a.input.lookupResponse(argNamed({
-    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
-    lib: [a.lib.common.input.getRequest],
-  }))
-
-  const responseListConverted = a.core.convertResponseList(argNamed({
-    param: { responseList },
-  }))
-
-  const registerResponse = a.output.getRegisterResponse(argNamed({
-    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
-    lib: [a.lib.common.output.postRequest],
-  }))
-
-  registerResponse({ responseList: responseListConverted })
-}
-
-const startLookupResponse = () => {
+const startChatHistoryLoader = () => {
+  a.app.loadChatHistory()
   setTimeout(async () => {
-    a.app.lookupResponse()
+    a.app.loadChatHistory()
   }, 5 * 1000)
 }
 
@@ -96,7 +79,6 @@ const main = async () => {
   a.lib.monkeyPatch()
 
   a.app.loadPromptForm()
-  a.app.loadChatHistory()
   a.app.startLookupResponse()
 
   a.app.showNotification()

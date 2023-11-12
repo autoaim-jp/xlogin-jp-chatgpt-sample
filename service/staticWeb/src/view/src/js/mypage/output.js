@@ -10,14 +10,6 @@ export const getSendPrompt = ({ apiEndpoint, getPromptValue, postRequest }) => {
   }
 }
 
-export const getRegisterResponse = ({ apiEndpoint, postRequest }) => {
-  const url = `${apiEndpoint}/prompt/register`
-  return ({ responseList }) => {
-    const param = { responseList }
-    return postRequest(url, param)
-  }
-}
-
 /* onClick */
 export const setOnClickSaveMessageButton = ({ onClickSaveMessageButton }) => {
   const saveMessageBtn = document.querySelector('#saveMessageBtn')
@@ -40,6 +32,9 @@ export const setOnSubmitSendPromptForm = ({ onSubmitSendPromptForm }) => {
 const rightMessageTemplateElm = document.querySelector('#rightMessageTemplate')
 const leftMessageTemplateElm = document.querySelector('#leftMessageTemplate')
 export const showChatList = ({ simpleChatList }) => {
+  if (!simpleChatList.isUpdated) {
+    return
+  }
   const chatAreaElm = document.querySelector('#chatArea')
   simpleChatList.forEach((chatObj) => {
     let chatElm = null

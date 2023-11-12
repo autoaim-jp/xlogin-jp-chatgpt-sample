@@ -10,11 +10,5 @@ export const fetchChatList = ({ apiEndpoint, getRequest }) => {
   return getRequest(url)
 }
 
-export const lookupResponse = ({ apiEndpoint, getRequest }) => {
-  const url = `${apiEndpoint}/response/list`
-  return getRequest(url)
-}
-
-
 export default {}
 
