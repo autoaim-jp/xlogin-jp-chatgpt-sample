@@ -14,9 +14,9 @@ import FormData from 'form-data'
 import xdevkit from './xdevkit-auth-router/src/app.js'
 import setting from './setting/index.js'
 import output from './output.js'
-import core from './core.js'
+import * as core from './core.js'
 import input from './input.js'
-import action from './action.js'
+import * as action from './action.js'
 import lib from './lib.js'
 
 
@@ -42,62 +42,15 @@ const _getOtherRouter = () => {
 const _getActionRouter = () => {
   const expressRouter = express.Router()
 
-  const timerAddHandler = a.action.getHandlerTimerAdd(argNamed({
-    core: [a.core.handleTimerAdd, a.core.createResponse],
+  const promptSendHandler = a.action.getHandlerPromptSend(argNamed({
+    core: [a.core.handlePromptSend, a.core.createResponse],
   }))
-  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/timer/add`, timerAddHandler)
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/prompt/send`, promptSendHandler)
 
-  const notificationOpenHandler = a.action.getHandlerNotificationOpen(argNamed({
-    core: [a.core.handleNotificationOpen, a.core.createResponse],
+  const ChatListHandler = a.action.getHandlerChatList(argNamed({
+    core: [a.core.handleInvalidSession, a.core.handleChatList, a.core.createResponse],
   }))
-  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/notification/open`, notificationOpenHandler)
-
-  const notificationListHandler = a.action.getHandlerNotificationList(argNamed({
-    core: [a.core.handleInvalidSession, a.core.handleNotificationList, a.core.createResponse],
-  }))
-  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/notification/list`, notificationListHandler)
-
-  const messageSaveHandler = a.action.getHandlerMessageSave(argNamed({
-    core: [a.core.handleMessageSave, a.core.createResponse],
-  }))
-  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/save`, messageSaveHandler)
-
-  const messageContentHandler = a.action.getHandlerMessageContent(argNamed({
-    core: [a.core.handleMessageContent, a.core.createResponse],
-  }))
-  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/content`, messageContentHandler)
-
-  const messageDeleteHandler = a.action.getHandlerMessageDelete(argNamed({
-    core: [a.core.handleMessageDelete, a.core.createResponse],
-  }))
-  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/message/delete`, messageDeleteHandler)
-
-  const updateBackupEmailAddressHandler = a.action.getHandlerUpdateBackupEmailAddress(argNamed({
-    core: [a.core.handleUpdateBackupEmailAddress, a.core.createResponse],
-  }))
-  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/backupEmailAddress/save`, updateBackupEmailAddressHandler)
-
-  const splitPermissionListHandler = a.action.getHandlerSplitPermissionList(argNamed({
-    core: [a.core.handleInvalidSession, a.core.handleSplitPermissionList, a.core.createResponse],
-  }))
-  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/session/splitPermissionList`, splitPermissionListHandler)
-
-  const uploadFileHandler = a.action.getHandlerUploadFile(argNamed({
-    core: [a.core.handleUploadFile, a.core.createResponse],
-    mod: [multer, FormData, Readable],
-  }))
-  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/form/save`, uploadFileHandler)
-
-  const fileListHandler = a.action.getHandlerFileList(argNamed({
-    core: [a.core.handleFileList, a.core.createResponse],
-  }))
-  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/file/list`, fileListHandler)
-
-  const fileContentHandler = a.action.getHandlerFileContent(argNamed({
-    core: [a.core.handleFileContent],
-  }))
-  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/file/content`, fileContentHandler)
-
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/chat/list`, ChatListHandler)
 
   return expressRouter
 }
