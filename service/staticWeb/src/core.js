@@ -7,6 +7,8 @@
 /* local setting */
 const mod = {}
 
+const userJsonList = {}
+
 export const init = (setting, output, input, lib) => {
   mod.setting = setting
   mod.output = output
@@ -24,6 +26,7 @@ export const handleSplitPermissionList = async ({ splitPermissionList }) => {
   return handleResult
 }
 
+/* promptをchatgptに登録。requestIdと生成したchatIdを返す。 */
 export const handlePromptSend = async ({ accessToken, prompt }) => {
   const promptSendResponse = await mod.output.promptSendRequest(argNamed({
     param: { accessToken, prompt },
@@ -31,26 +34,85 @@ export const handlePromptSend = async ({ accessToken, prompt }) => {
     lib: [mod.lib.postRequest],
   }))
   console.log({ promptSendResponse })
+  if (!promptSendResponse || !promptSendResponse.data || !promptSendResponse.data.result) {
+    const status = mod.setting.browserServerSetting.getValue('statusList.INVALID')
+    return { response: { status, } }
+  }
+ 
+  console.log('result:', promptSendResponse?.data?.result)
+
+  const { requestId } = promptSendResponse.data.result
+  const promptChatId = mod.lib.getUlid()
+  const responseChatId = mod.lib.getUlid()
+
+  const result = { requestId, promptChatId, responseChatId }
+  const handleResult = { response: { status: mod.setting.browserServerSetting.getValue('statusList.OK'), result } }
+  return handleResult
+}
+
+/* chatListのjsonを取得。 */
+export const handleChatList = async ({ accessToken }) => {
+  const fileGetResponse = await mod.input.fileGetRequest(argNamed({
+    param: { accessToken },
+    xdevkitSetting: mod.setting.xdevkitSetting.getList('api.API_VERSION', 'env.API_SERVER_ORIGIN', 'env.CLIENT_ID'),
+    setting: mod.setting.getList('user.CHATGPT_FILE_PATH'),
+    lib: [mod.lib.getRequest],
+  }))
+
+  console.log({ fileGetResponse })
+  if (!fileGetResponse || !fileGetResponse.data || !fileGetResponse.data.result) {
+    const status = mod.setting.browserServerSetting.getValue('statusList.INVALID')
+    return { response: { status, } }
+  }
+  console.log('result:', fileGetResponse?.data?.result)
+
+  const chatList = fileGetResponse.data.result.jsonContent || {}
+  const result = { chatList }
+
+  const handleResult = { response: { status: mod.setting.browserServerSetting.getValue('statusList.OK'), result, } }
+  return handleResult
+}
+
+/* chatListのjsonを更新。 */
+export const handleChatListUpdate = async ({ accessToken, chatList }) => {
+  const message = chatList 
+
+  const fileSaveResponse = await mod.output.fileSaveRequest(argNamed({
+    param: { accessToken, message },
+    xdevkitSetting: mod.setting.xdevkitSetting.getList('api.API_VERSION', 'env.API_SERVER_ORIGIN', 'env.CLIENT_ID'),
+    setting: mod.setting.getList('user.CHATGPT_FILE_PATH'),
+    lib: [mod.lib.postRequest],
+  }))
+
+  console.log({ fileSaveResponse })
+  if (!fileSaveResponse || !fileSaveResponse.data || !fileSaveResponse.data.result) {
+    const status = mod.setting.browserServerSetting.getValue('statusList.INVALID')
+    return { response: { status, } }
+  }
+  console.log('result:', fileSaveResponse?.data?.result)
 
   const handleResult = { response: { status: mod.setting.browserServerSetting.getValue('statusList.OK') } }
   return handleResult
 }
 
-export const handleChatList = async ({ accessToken }) => {
-  const chatListResponse = await mod.input.chatListRequest(argNamed({
-    param: { accessToken },
+/* requestIdのリストでresponseを探す。 */
+export const handleLookupResponseList = async ({ accessToken, requestIdListStr }) => {
+  const responseListResponse = await mod.input.lookupResponseListRequest(argNamed({
+    param: { accessToken, requestIdListStr },
     xdevkitSetting: mod.setting.xdevkitSetting.getList('api.API_VERSION', 'env.API_SERVER_ORIGIN', 'env.CLIENT_ID'),
     lib: [mod.lib.getRequest],
   }))
 
-  if (!chatListResponse || !chatListResponse.data) {
+  console.log({ responseListResponse })
+
+  if (!responseListResponse || !responseListResponse.data) {
     const status = mod.setting.browserServerSetting.getValue('statusList.INVALID_SESSION')
     const result = {}
     const handleResult = { response: { status, result } }
     return handleResult
   }
 
-  const { result } = chatListResponse.data
+  const { result } = responseListResponse.data
   const status = mod.setting.browserServerSetting.getValue('statusList.OK')
 
   const handleResult = { response: { status, result } }

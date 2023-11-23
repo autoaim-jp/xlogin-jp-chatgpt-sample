@@ -17,7 +17,7 @@ export const getHandlerSplitPermissionList = ({ handleInvalidSession, handleSpli
 
 export const getHandlerPromptSend = ({ handlePromptSend, createResponse }) => {
   return async (req, res) => {
-    const { accessToken } = req.session.auth
+    const { accessToken, userId } = req.session.auth
     const { prompt } = req.body
 
     const handleResult = await handlePromptSend({ accessToken, prompt })
@@ -25,6 +25,18 @@ export const getHandlerPromptSend = ({ handlePromptSend, createResponse }) => {
     createResponse({ req, res, handleResult })
   }
 }
+
+export const getHandlerChatListUpdate = ({ handleChatListUpdate, createResponse }) => {
+  return async (req, res) => {
+    const { accessToken, userId } = req.session.auth
+    const { chatList } = req.body
+
+    const handleResult = await handleChatListUpdate({ accessToken, chatList })
+
+    createResponse({ req, res, handleResult })
+  }
+}
+
 
 export const getHandlerChatList = ({ handleInvalidSession, handleChatList, createResponse }) => {
   return async (req, res) => {
@@ -39,6 +51,22 @@ export const getHandlerChatList = ({ handleInvalidSession, handleChatList, creat
     createResponse({ req, res, handleResult })
   }
 }
+
+export const getHandlerLookupResponseList = ({ handleInvalidSession, handleLookupResponseList, createResponse }) => {
+  return async (req, res) => {
+    if (handleInvalidSession({ req, res })) {
+      return
+    }
+
+    const { accessToken } = req.session.auth
+    const { requestIdListStr } = req.query
+
+    const handleResult = await handleLookupResponseList({ accessToken, requestIdListStr })
+
+    createResponse({ req, res, handleResult })
+  }
+}
+
 
 export default {}
 

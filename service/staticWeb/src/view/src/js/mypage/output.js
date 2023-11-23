@@ -10,6 +10,15 @@ export const getSendPrompt = ({ apiEndpoint, getPromptValue, postRequest }) => {
   }
 }
 
+export const getUpdateChatList = ({ apiEndpoint, postRequest }) => {
+  const url = `${apiEndpoint}/chat/update`
+  return ({ newChatList }) => {
+    const param = { chatList: newChatList, }
+    return postRequest(url, param)
+  }
+}
+
+
 /* onClick */
 export const setOnClickSaveMessageButton = ({ onClickSaveMessageButton }) => {
   const saveMessageBtn = document.querySelector('#saveMessageBtn')
@@ -33,13 +42,13 @@ const rightMessageTemplateElm = document.querySelector('#rightMessageTemplate')
 const leftMessageTemplateElm = document.querySelector('#leftMessageTemplate')
 export const showChatList = ({ simpleChatList }) => {
   /* simpleChatList has { isUpdated, chatList } */
-  if (!simpleChatList.isUpdated) {
+  if (!simpleChatList || !simpleChatList.isUpdated) {
     return
   }
 
   const chatAreaElm = document.querySelector('#chatArea')
   simpleChatList.chatList.forEach((chatObj) => {
-    /* chatobj has { chatId, isMine, message } */
+    /* chatobj has { chatId, isMine, text } */
     let chatElm = document.querySelector(`[data-chat-id="${chatObj.chatId}"]`)
     if (!chatElm) {
       if (chatObj.isMine) {
@@ -48,19 +57,22 @@ export const showChatList = ({ simpleChatList }) => {
         chatElm = leftMessageTemplateElm.cloneNode(true)
       }
       chatElm.id = ''
-
-      chatElm.querySelector('[data-id="messageBody"]').innerText = chatObj.message
-
+      chatElm.classList.remove('hidden')
+      chatElm.dataset.chatId = chatObj.chatId
       chatAreaElm.appendChild(chatElm)
+    }
+
+    if (chatObj.text) {
+      chatElm.querySelector('[data-id="messageBody"]').innerText = chatObj.text
     } else {
-      chatElm.querySelector('[data-id="messageBody"]').innerText = chatObj.message
+      chatElm.querySelector('[data-id="messageBody"]').innerText = '...'
     }
   })
 }
 
 export const showChatHistory = ({ splitPermissionListResult }) => {
   const { splitPermissionList, clientId } = splitPermissionListResult.result
-  if (splitPermissionList.optional[`rw:${clientId}:json`]) {
+  if (splitPermissionList.optional[`rw:${clientId}:json_v1`]) {
     document.querySelector('#chatArea').classList.remove('hidden')
   } else {
     document.querySelector('#jsonPermissionRequestContainer').classList.remove('hidden')
@@ -75,4 +87,10 @@ export const showPromptForm = ({ splitPermissionListResult }) => {
     document.querySelector('#chatgptPermissionRequestContainer').classList.remove('hidden')
   }
 }
+
+export const clearPromptValue = () => {
+  const sendPromptInputElm = document.querySelector('#sendPromptInput')
+  sendPromptInputElm.value = ''
+}
+
 

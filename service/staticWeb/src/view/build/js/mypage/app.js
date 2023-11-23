@@ -30,23 +30,38 @@ const loadPromptForm = () => {
     input: [a.input.getPromptValue],
     lib: [a.lib.common.output.postRequest],
   }))
+
+  const updateChatList = a.output.getUpdateChatList(argNamed({
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.output.postRequest],
+  }))
+
+  const fetchChatList = a.input.getFetchChatList(argNamed({
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.input.getRequest],
+  }))
+
   const onSubmitSendPromptForm = a.action.getOnSubmitSendPromptForm(argNamed({
-    app: { loadChatHistory },
-    output: { sendPrompt },
+    input: [a.input.getPromptValue],
+    input2: { fetchChatList },
+    output: [a.output.clearPromptValue],
+    output2: { sendPrompt, updateChatList },
+    core: [a.core.appendChatList],
+    app: { loadChatHistory }
   }))
   a.output.setOnSubmitSendPromptForm(argNamed({
     onSubmit: { onSubmitSendPromptForm },
   }))
 }
 
-const loadChatHistory = () => {
-  const chatList = a.input.fetchChatList(argNamed({
+const loadChatHistory = async () => {
+  const fetchChatList = a.input.getFetchChatList(argNamed({
     browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
     lib: [a.lib.common.input.getRequest],
   }))
 
-  const simpleChatList = a.core.convertChatList(argNamed({
-    input: { chatList },
+  const simpleChatList = await a.core.convertChatList(argNamed({
+    input: { fetchChatList },
   }))
 
   a.output.showChatList(argNamed({
@@ -66,10 +81,31 @@ const loadPermission = async () => {
   a.lib.xdevkit.output.reloadXloginLoginBtn(splitPermissionListResult?.result?.clientId)
 }
 
-const startChatHistoryLoader = () => {
-  a.app.loadChatHistory()
-  setTimeout(async () => {
-    a.app.loadChatHistory()
+const startResponseLoader = async () => {
+  const fetchResponseList = a.input.getFetchResponseList(argNamed({
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.input.getRequest],
+  }))
+
+  const fetchChatList = a.input.getFetchChatList(argNamed({
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.input.getRequest],
+  }))
+
+  const updateChatList = a.output.getUpdateChatList(argNamed({
+    browserServerSetting: a.setting.browserServerSetting.getList('apiEndpoint'),
+    lib: [a.lib.common.output.postRequest],
+  }))
+
+  await a.core.lookupResponse(argNamed({
+    param: { fetchResponseList, fetchChatList, updateChatList, },
+    app: { loadChatHistory },
+  }))
+  setInterval(async () => {
+    await a.core.lookupResponse(argNamed({
+      param: { fetchResponseList, fetchChatList, updateChatList, },
+      app: { loadChatHistory },
+    }))
   }, 5 * 1000)
 }
 
@@ -80,13 +116,14 @@ const main = async () => {
 
   console.log('loadPromptForm')
   a.app.loadPromptForm()
-  console.log('startChatHistoryLoader')
-  a.app.startChatHistoryLoader()
-
-  console.log('showNotification')
-  a.app.showNotification()
+  // console.log('showNotification')
+  // a.app.showNotification()
   console.log('loadPermission')
   a.app.loadPermission()
+  await a.app.loadChatHistory()
+
+  console.log('startResponseLoader')
+  a.app.startResponseLoader()
 
   setTimeout(() => {
     a.lib.xdevkit.output.switchLoading(false)
@@ -99,7 +136,7 @@ a.app = {
   loadPromptForm,
   loadChatHistory,
 
-  startChatHistoryLoader,
+  startResponseLoader,
 
   loadPermission,
 }

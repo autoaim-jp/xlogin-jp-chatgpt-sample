@@ -1,5 +1,6 @@
 import fs from 'fs'
 import { Readable } from 'stream'
+import { ulid } from 'ulid'
 import axios from 'axios'
 import crypto from 'crypto'
 import https from 'https'
@@ -52,10 +53,21 @@ const _getActionRouter = () => {
   }))
   expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/prompt/send`, promptSendHandler)
 
-  const ChatListHandler = a.action.getHandlerChatList(argNamed({
+  const chatListUpdateHandler = a.action.getHandlerChatListUpdate(argNamed({
+    core: [a.core.handleChatListUpdate, a.core.createResponse],
+  }))
+  expressRouter.post(`${setting.browserServerSetting.getValue('apiEndpoint')}/chat/update`, chatListUpdateHandler)
+
+  const chatListHandler = a.action.getHandlerChatList(argNamed({
     core: [a.core.handleInvalidSession, a.core.handleChatList, a.core.createResponse],
   }))
-  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/chat/list`, ChatListHandler)
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/chat/list`, chatListHandler)
+
+  const lookupResponseListHandler = a.action.getHandlerLookupResponseList(argNamed({
+    core: [a.core.handleInvalidSession, a.core.handleLookupResponseList, a.core.createResponse],
+  }))
+  expressRouter.get(`${setting.browserServerSetting.getValue('apiEndpoint')}/response/list`, lookupResponseListHandler)
+
 
   return expressRouter
 }
@@ -79,10 +91,9 @@ const _startServer = (expressApp) => {
 
 const main = () => {
   dotenv.config()
-  lib.init(axios, http, https, crypto)
+  lib.init(axios, http, https, crypto, ulid)
   setting.init(process.env)
   core.init(setting, output, input, lib)
-
 
   const expressApp = express()
   expressApp.use(_getOtherRouter())
