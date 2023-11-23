@@ -1,11 +1,12 @@
 /* /lib.js */
 const mod = {}
 
-const init = (axios, http, https, crypto) => {
+const init = (axios, http, https, crypto, ulid) => {
   mod.crypto = crypto
   mod.http = http
   mod.https = https
   mod.axios = axios
+  mod.ulid = ulid
 }
 
 const objToQuery = (obj) => {
@@ -178,6 +179,11 @@ const postFormRequest = (clientId, accessToken, origin, path, formData) => {
   })
 }
 
+const getUlid = () => {
+  return mod.ulid()
+}
+
+
 export default {
   init,
   postRequest,
@@ -186,5 +192,7 @@ export default {
 
   getFileRequest,
   postFormRequest,
+
+  getUlid,
 }
 
