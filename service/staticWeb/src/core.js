@@ -7,8 +7,6 @@
 /* local setting */
 const mod = {}
 
-const userJsonList = {}
-
 export const init = (setting, output, input, lib) => {
   mod.setting = setting
   mod.output = output
@@ -36,9 +34,9 @@ export const handlePromptSend = async ({ accessToken, prompt }) => {
   console.log({ promptSendResponse })
   if (!promptSendResponse || !promptSendResponse.data || !promptSendResponse.data.result) {
     const status = mod.setting.browserServerSetting.getValue('statusList.INVALID')
-    return { response: { status, } }
+    return { response: { status } }
   }
- 
+
   console.log('result:', promptSendResponse?.data?.result)
 
   const { requestId } = promptSendResponse.data.result
@@ -62,20 +60,20 @@ export const handleChatList = async ({ accessToken }) => {
   console.log({ fileGetResponse })
   if (!fileGetResponse || !fileGetResponse.data || !fileGetResponse.data.result) {
     const status = mod.setting.browserServerSetting.getValue('statusList.INVALID')
-    return { response: { status, } }
+    return { response: { status } }
   }
   console.log('result:', fileGetResponse?.data?.result)
 
   const chatList = fileGetResponse.data.result.jsonContent || {}
   const result = { chatList }
 
-  const handleResult = { response: { status: mod.setting.browserServerSetting.getValue('statusList.OK'), result, } }
+  const handleResult = { response: { status: mod.setting.browserServerSetting.getValue('statusList.OK'), result } }
   return handleResult
 }
 
 /* chatListのjsonを更新。 */
 export const handleChatListUpdate = async ({ accessToken, chatList }) => {
-  const message = chatList 
+  const message = chatList
 
   const fileSaveResponse = await mod.output.fileSaveRequest(argNamed({
     param: { accessToken, message },
@@ -87,7 +85,7 @@ export const handleChatListUpdate = async ({ accessToken, chatList }) => {
   console.log({ fileSaveResponse })
   if (!fileSaveResponse || !fileSaveResponse.data || !fileSaveResponse.data.result) {
     const status = mod.setting.browserServerSetting.getValue('statusList.INVALID')
-    return { response: { status, } }
+    return { response: { status } }
   }
   console.log('result:', fileSaveResponse?.data?.result)
 

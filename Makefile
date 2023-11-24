@@ -99,18 +99,19 @@ docker-compose-up-test:
 	docker volume rm ${DOCKER_PROJECT_NAME}_xl-client-sample-rc-redis
 	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml up --abort-on-container-exit
 
+# down
+docker-compose-down-app:
+	docker compose -p ${DOCKER_PROJECT_NAME}-app -f ./app/docker/docker-compose.app.yml down --volumes
+docker-compose-down-test:
+	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml down --volumes
+
+# view compiler
 docker-compose-up-view-compile:
 	BUILD_COMMAND="compile" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 docker-compose-up-view-compile-minify:
 	BUILD_COMMAND="compile-minify" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
 docker-compose-up-view-watch:
 	BUILD_COMMAND="watch" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
-
-# down
-docker-compose-down-app:
-	docker compose -p ${DOCKER_PROJECT_NAME}-app -f ./app/docker/docker-compose.app.yml down --volumes
-docker-compose-down-test:
-	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml down --volumes
 
 # devtool
 docker-compose-up-lint:

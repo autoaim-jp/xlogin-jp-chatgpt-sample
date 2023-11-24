@@ -5,7 +5,7 @@ export const getSendPrompt = ({ apiEndpoint, getPromptValue, postRequest }) => {
   const url = `${apiEndpoint}/prompt/send`
   return () => {
     const prompt = getPromptValue()
-    const param = { prompt, }
+    const param = { prompt }
     return postRequest(url, param)
   }
 }
@@ -13,7 +13,7 @@ export const getSendPrompt = ({ apiEndpoint, getPromptValue, postRequest }) => {
 export const getUpdateChatList = ({ apiEndpoint, postRequest }) => {
   const url = `${apiEndpoint}/chat/update`
   return ({ newChatList }) => {
-    const param = { chatList: newChatList, }
+    const param = { chatList: newChatList }
     return postRequest(url, param)
   }
 }
@@ -80,8 +80,8 @@ export const showChatHistory = ({ splitPermissionListResult }) => {
 }
 
 export const showPromptForm = ({ splitPermissionListResult }) => {
-  const { splitPermissionList, clientId } = splitPermissionListResult.result
-  if (splitPermissionList.optional[`rw:auth:chatgpt`]) {
+  const { splitPermissionList } = splitPermissionListResult.result
+  if (splitPermissionList.optional['rw:auth:chatgpt']) {
     document.querySelector('#sendPromptForm').classList.remove('hidden')
   } else {
     document.querySelector('#chatgptPermissionRequestContainer').classList.remove('hidden')
@@ -92,5 +92,4 @@ export const clearPromptValue = () => {
   const sendPromptInputElm = document.querySelector('#sendPromptInput')
   sendPromptInputElm.value = ''
 }
-
 

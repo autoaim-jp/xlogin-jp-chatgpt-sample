@@ -1,4 +1,6 @@
-export const getOnSubmitSendPromptForm = ({ sendPrompt, getPromptValue, clearPromptValue, fetchChatList, appendChatList, updateChatList, loadChatHistory }) => {
+export const getOnSubmitSendPromptForm = ({
+  sendPrompt, getPromptValue, clearPromptValue, fetchChatList, appendChatList, updateChatList, loadChatHistory,
+}) => {
   return async () => {
     const sendPromptResult = await sendPrompt()
     console.log({ sendPromptResult })
@@ -8,7 +10,9 @@ export const getOnSubmitSendPromptForm = ({ sendPrompt, getPromptValue, clearPro
     console.log({ chatListResult })
     const { chatList } = chatListResult.result
 
-    const newChatList = appendChatList({ getPromptValue, chatList, promptChatId, responseChatId, requestId })
+    const newChatList = appendChatList({
+      getPromptValue, chatList, promptChatId, responseChatId, requestId,
+    })
 
     const updateChatListResult = await updateChatList({ newChatList })
     console.log({ updateChatListResult })

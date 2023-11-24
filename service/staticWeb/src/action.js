@@ -1,11 +1,11 @@
 /* /action.js */
 
 export const getHandlerSplitPermissionList = ({ handleInvalidSession, handleSplitPermissionList, createResponse }) => {
-   return async (req, res) => {
-     if (handleInvalidSession({ req, res })) {
-       return
-     }
- 
+  return async (req, res) => {
+    if (handleInvalidSession({ req, res })) {
+      return
+    }
+
     const { splitPermissionList } = req.session.auth
 
     const handleResult = await handleSplitPermissionList({ splitPermissionList })
@@ -17,7 +17,7 @@ export const getHandlerSplitPermissionList = ({ handleInvalidSession, handleSpli
 
 export const getHandlerPromptSend = ({ handlePromptSend, createResponse }) => {
   return async (req, res) => {
-    const { accessToken, userId } = req.session.auth
+    const { accessToken } = req.session.auth
     const { prompt } = req.body
 
     const handleResult = await handlePromptSend({ accessToken, prompt })
@@ -28,7 +28,7 @@ export const getHandlerPromptSend = ({ handlePromptSend, createResponse }) => {
 
 export const getHandlerChatListUpdate = ({ handleChatListUpdate, createResponse }) => {
   return async (req, res) => {
-    const { accessToken, userId } = req.session.auth
+    const { accessToken } = req.session.auth
     const { chatList } = req.body
 
     const handleResult = await handleChatListUpdate({ accessToken, chatList })
