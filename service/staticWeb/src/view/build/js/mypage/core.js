@@ -36,7 +36,7 @@ export const convertChatList = async ({ fetchChatList }) => {
   Object.entries(chatList).forEach(([chatId, chat]) => {
     chat.chatId = chatId
     simpleChatList.chatList.push(chat)
-    if (chat.requestId) {
+    if (chat.requestId && chat.waiting) {
       requestIdList[chat.requestId] = true
     }
   })
