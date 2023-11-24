@@ -67,19 +67,7 @@ help:
 
 
 # init
-init-xdevkit:
-	#rm -rf xdevkit/*
-	git config -f .gitmodules submodule.xdevkit.branch ${XDEVKIT_VERSION}
-	git submodule update --remote --init --recursive
-	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/staticWeb/src/view/src/js/_setting/browserServerSetting.js
-	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/staticWeb/src/setting/browserServerSetting.js
-	
-	rm -rf ./service/staticWeb/src/xdevkit-auth-router
-	cp -r ./xdevkit/common/xdevkit-auth-router ./service/staticWeb/src/
-	rm -rf ./service/staticWeb/src/xdevkit-auth-router/.git
-	
-	cp -r ./xdevkit/common/xdevkit-view-component/src/js/_xdevkit ./service/staticWeb/src/view/src/js/_lib/
-	cp -r ./xdevkit/common/xdevkit-view-component/src/ejs ./service/staticWeb/src/view/src/ejs/_xdevkit
+include app/makefile/init-xdevkit
 
 # build
 docker-compose-build-app:
