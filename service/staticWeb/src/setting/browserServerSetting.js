@@ -42,7 +42,6 @@ const labelList = {
         label: 'ファイル',
         summary: '連携するサービスで、あなたがデータを保存できます。',
       },
-
     },
   },
   scopeOperation: {
