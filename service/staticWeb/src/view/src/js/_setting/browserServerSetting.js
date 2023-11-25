@@ -20,10 +20,6 @@ const labelList = {
         label: 'ユーザー名',
         summary: '一般公開されているユーザーの名前です。',
       },
-      chatgpt: {
-        label: 'ChatGPT',
-        summary: 'ChatGPTを使用する機能です。',
-      },
     },
     service: {
       serviceUserId: {
@@ -41,6 +37,10 @@ const labelList = {
       file_v1: {
         label: 'ファイル',
         summary: '連携するサービスで、あなたがデータを保存できます。',
+      },
+      chatgpt: {
+        label: 'ChatGPT',
+        summary: '連携するサービスで、ChatGPTを利用するための権限です。',
       },
     },
   },

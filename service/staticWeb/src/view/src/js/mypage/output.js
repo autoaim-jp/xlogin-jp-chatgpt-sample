@@ -80,8 +80,8 @@ export const showChatHistory = ({ splitPermissionListResult }) => {
 }
 
 export const showPromptForm = ({ splitPermissionListResult }) => {
-  const { splitPermissionList } = splitPermissionListResult.result
-  if (splitPermissionList.optional['rw:auth:chatgpt']) {
+  const { splitPermissionList, clientId } = splitPermissionListResult.result
+  if (splitPermissionList.optional[`rw:${clientId}:chatgpt`]) {
     document.querySelector('#sendPromptForm').classList.remove('hidden')
   } else {
     document.querySelector('#chatgptPermissionRequestContainer').classList.remove('hidden')
