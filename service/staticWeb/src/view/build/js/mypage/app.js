@@ -47,7 +47,7 @@ const loadPromptForm = () => {
     output: [a.output.clearPromptValue],
     output2: { sendPrompt, updateChatList },
     core: [a.core.appendChatList],
-    app: { loadChatHistory }
+    app: [a.app.loadChatHistory],
   }))
   a.output.setOnSubmitSendPromptForm(argNamed({
     onSubmit: { onSubmitSendPromptForm },
@@ -60,8 +60,10 @@ const loadChatHistory = async () => {
     lib: [a.lib.common.input.getRequest],
   }))
 
-  const simpleChatList = await a.core.convertChatList(argNamed({
-    input: { fetchChatList },
+  const chatListResult = await fetchChatList()
+
+  const simpleChatList = a.core.convertChatList(argNamed({
+    param: { chatListResult },
   }))
 
   a.output.showChatList(argNamed({
@@ -98,12 +100,12 @@ const startResponseLoader = async () => {
   }))
 
   await a.core.lookupResponse(argNamed({
-    param: { fetchResponseList, fetchChatList, updateChatList, },
-    app: { loadChatHistory },
+    param: { fetchResponseList, fetchChatList, updateChatList },
+    app: [a.app.loadChatHistory],
   }))
   setInterval(async () => {
     await a.core.lookupResponse(argNamed({
-      param: { fetchResponseList, fetchChatList, updateChatList, },
+      param: { fetchResponseList, fetchChatList, updateChatList },
       app: { loadChatHistory },
     }))
   }, 5 * 1000)

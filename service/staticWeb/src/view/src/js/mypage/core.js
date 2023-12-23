@@ -2,7 +2,9 @@
 
 let requestIdList = {}
 
-export const appendChatList = ({ getPromptValue, chatList, promptChatId, responseChatId, requestId }) => {
+export const appendChatList = ({
+  getPromptValue, chatList, promptChatId, responseChatId, requestId,
+}) => {
   const prompt = getPromptValue()
 
   const newChatList = chatList
@@ -14,11 +16,10 @@ export const appendChatList = ({ getPromptValue, chatList, promptChatId, respons
 
 
 let lastChatListStr = null
-export const convertChatList = async ({ fetchChatList }) => {
-  const chatListResult = await fetchChatList()
+export const convertChatList = ({ chatListResult }) => {
   console.log({ chatListResult })
   if (!chatListResult || !chatListResult.result) {
-    return
+    return null
   }
   const { chatList } = chatListResult.result
 
@@ -36,7 +37,7 @@ export const convertChatList = async ({ fetchChatList }) => {
   Object.entries(chatList).forEach(([chatId, chat]) => {
     chat.chatId = chatId
     simpleChatList.chatList.push(chat)
-    if (chat.requestId) {
+    if (chat.requestId && chat.waiting) {
       requestIdList[chat.requestId] = true
     }
   })
@@ -44,7 +45,9 @@ export const convertChatList = async ({ fetchChatList }) => {
   return simpleChatList
 }
 
-export const lookupResponse = async ({ fetchResponseList, fetchChatList, updateChatList, loadChatHistory }) => {
+export const lookupResponse = async ({
+  fetchResponseList, fetchChatList, updateChatList, loadChatHistory,
+}) => {
   const requestIdListStr = Object.keys(requestIdList).join(',')
   if (requestIdListStr.length === 0) {
     return
@@ -57,11 +60,11 @@ export const lookupResponse = async ({ fetchResponseList, fetchChatList, updateC
 
   const updateList = {}
   Object.entries(responseListResult.result).forEach(([requestId, responseObj]) => {
-    if(responseObj.waiting === true) {
+    if (responseObj.waiting === true) {
       return
     }
 
-    if(!responseObj.result || !responseObj.result.response) {
+    if (!responseObj.result || !responseObj.result.response) {
       return
     }
     updateList[requestId] = responseObj.result.response

@@ -1,7 +1,7 @@
 /* /input.js */
 
 export const lookupResponseListRequest = async ({
-  accessToken, CLIENT_ID, API_VERSION, API_SERVER_ORIGIN, getRequest, requestIdListStr
+  accessToken, CLIENT_ID, API_VERSION, API_SERVER_ORIGIN, getRequest, requestIdListStr,
 }) => {
   const origin = API_SERVER_ORIGIN
   const path = `/api/${API_VERSION}/chatgpt/response`

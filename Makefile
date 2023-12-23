@@ -67,19 +67,7 @@ help:
 
 
 # init
-init-xdevkit:
-	#rm -rf xdevkit/*
-	git config -f .gitmodules submodule.xdevkit.branch ${XDEVKIT_VERSION}
-	git submodule update --remote --init --recursive
-	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/staticWeb/src/view/src/js/_setting/browserServerSetting.js
-	cp ./xdevkit/common/xdevkit-setting/browserServerSetting.js ./service/staticWeb/src/setting/browserServerSetting.js
-	
-	rm -rf ./service/staticWeb/src/xdevkit-auth-router
-	cp -r ./xdevkit/common/xdevkit-auth-router ./service/staticWeb/src/
-	rm -rf ./service/staticWeb/src/xdevkit-auth-router/.git
-	
-	cp -r ./xdevkit/common/xdevkit-view-component/src/js/_xdevkit ./service/staticWeb/src/view/src/js/_lib/
-	cp -r ./xdevkit/common/xdevkit-view-component/src/ejs ./service/staticWeb/src/view/src/ejs/_xdevkit
+include app/makefile/init-xdevkit
 
 # build
 docker-compose-build-app:
@@ -99,18 +87,21 @@ docker-compose-up-test:
 	docker volume rm ${DOCKER_PROJECT_NAME}_xl-client-sample-rc-redis
 	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml up --abort-on-container-exit
 
-docker-compose-up-view-compile:
-	BUILD_COMMAND="compile" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
-docker-compose-up-view-compile-minify:
-	BUILD_COMMAND="compile-minify" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
-docker-compose-up-view-watch:
-	BUILD_COMMAND="watch" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
-
 # down
 docker-compose-down-app:
 	docker compose -p ${DOCKER_PROJECT_NAME}-app -f ./app/docker/docker-compose.app.yml down --volumes
 docker-compose-down-test:
 	docker compose -p ${DOCKER_PROJECT_NAME}-test -f ./docker/docker-compose.test.yml down --volumes
+
+# view compiler
+docker-compose-up-view-compile:
+	VIEW_PATH=../../../../service/staticWeb/src/view BUILD_COMMAND="compile" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+docker-compose-up-view-compile-minify:
+	VIEW_PATH=../../../../service/staticWeb/src/view BUILD_COMMAND="compile-minify" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+docker-compose-up-view-watch:
+	VIEW_PATH=../../../../service/staticWeb/src/view BUILD_COMMAND="watch" docker compose -p ${DOCKER_PROJECT_NAME}-view -f ./xdevkit/standalone/xdevkit-view-compiler/docker/docker-compose.view.yml up --abort-on-container-exit
+
+
 
 # devtool
 docker-compose-up-lint:
