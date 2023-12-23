@@ -105,9 +105,9 @@ docker-compose-up-view-watch:
 
 # devtool
 docker-compose-up-lint:
-	docker compose -p ${DOCKER_PROJECT_NAME}-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
+	SERVICE_PATH=../../../../service docker compose -p ${DOCKER_PROJECT_NAME}-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
 docker-compose-up-lint-fix:
-	FIX_OPTION="--fix" docker compose -p ${DOCKER_PROJECT_NAME}-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
+	SERVICE_PATH=../../../../service FIX_OPTION="--fix" docker compose -p ${DOCKER_PROJECT_NAME}-lint -f ./xdevkit/standalone/xdevkit-eslint/docker/docker-compose.eslint.yml up --abort-on-container-exit
 
 init-doc-deploy-key:
 	mkdir -p ./secret/
@@ -118,12 +118,16 @@ docker-compose-rebuild-doc:
 	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml down --volumes
 	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml build
 docker-compose-up-doc-publish:
+	SECRET_PATH=../../../../secret \
+	SERVICE_PATH=../../../../service \
 	JSDOC_COMMAND="generate-publish" \
 	GIT_USER_NAME="${GIT_USER_NAME}" \
 	GIT_USER_EMAIL="${GIT_USER_EMAIL}" \
 	GIT_REPOSITORY_URL="${GIT_REPOSITORY_URL}" \
 	docker compose -p ${DOCKER_PROJECT_NAME}-doc -f ./xdevkit/standalone/xdevkit-jsdoc/docker/docker-compose.jsdoc.yml up --abort-on-container-exit
 docker-compose-up-doc-generate:
+	SECRET_PATH=../../../../secret \
+	SERVICE_PATH=../../../../service \
 	JSDOC_COMMAND="generate" \
 	GIT_USER_NAME="${GIT_USER_NAME}" \
 	GIT_USER_EMAIL="${GIT_USER_EMAIL}" \
